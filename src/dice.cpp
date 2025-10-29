@@ -1,6 +1,6 @@
 #include <cstdlib>
 
-#include <../include/Dice.h>
+#include "../include/Dice.h"
 
 Dice::Dice() {
     roll();

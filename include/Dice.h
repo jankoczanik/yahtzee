@@ -1,6 +1,8 @@
 #ifndef Dice_h
 #define Dice_h
 
+#include <iostream>
+
 class Dice {
 
     public:

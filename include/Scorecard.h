@@ -7,9 +7,12 @@ class Scorecard {
     public:
         Scorecard();
         void printScorecard() const;
-        int score(int, Dice[]);
+        int score(const Dice dice[], int category) const;
 
     private:
+        int frequencies(const Dice dice[], int freq[6]) const;
+        bool hasKind(const int freq[6], int kind) const;
+        bool hasStraight(const int freq[6], int straight) const;
         int player[13];
         int bot[13];
 
