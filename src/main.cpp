@@ -11,7 +11,7 @@ int main() {
     Scorecard score;
     Dice hand[5];
 
-    playerTurn(hand);
+    playerTurn(hand, score);
 
     return 0;
 }

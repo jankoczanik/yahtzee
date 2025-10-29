@@ -11,7 +11,38 @@ void Scorecard::printScorecard() const {
 
 }
 
-int Scorecard::score(const Dice hand[], int category) const {
+std::string Scorecard::getCategoryName(int category) const {
+    if (category < 1 || category > 13) return "";
+    std::string categories[] = {
+        "One's",
+        "Two's",
+        "Three's",
+        "Four's",
+        "Five's",
+        "Six's",
+        "3 of Kind",
+        "4 of Kind",
+        "F House",
+        "S Straight",
+        "L Straight",
+        "Yahtzee",
+        "Chance",
+    };
+    return categories[category - 1];
+}
+
+int Scorecard::score(const Dice hand[], int category, bool isPlayer) {
+    int scoring = getScore(hand, category);
+
+    if (isPlayer)
+        player[category - 1] = scoring;
+    else
+        bot[category - 1] = scoring;
+
+    return scoring;
+}
+
+int Scorecard::getScore(const Dice hand[], int category) const {
     if (category <= 6) { // 1's, 2's, 3's, 4's, 5's, 6's
 
         int total = 0;
@@ -99,4 +130,9 @@ bool Scorecard::hasStraight(const int freq[6], int straight) const {
             return true;
     }
     return false;
+}
+
+bool Scorecard::available(int category, bool isPlayer) const {
+    if (category < 1 || category > 13) return false;
+    return isPlayer ? (player[category - 1] == -1) : (bot[category - 1] == -1);
 }
