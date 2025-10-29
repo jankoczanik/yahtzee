@@ -9,7 +9,6 @@ class Dice {
         int getFace() const;
 
     private:
-
         int face;
 };
 
