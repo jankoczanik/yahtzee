@@ -150,24 +150,37 @@ std::string botsMove(const Dice dice[5], Scorecard& score) {
         return "nnnnn";
     }
     if (score.hasStraight(freq, 4) && (score.available(10, false) || score.available(11, false))) {
-        // Has a small straight, try for large straight
-        bool keep[6] = {false};  // keep[x] = true means keep value (x+1)
+        int straightType;
+        
+        if (freq[0] && freq[1] && freq[2] && freq[3]) // 1-2-3-4
+            straightType = 1;
+        else if (freq[1] && freq[2] && freq[3] && freq[4]) // 2-3-4-5
+            straightType = 2;
+        else if (freq[2] && freq[3] && freq[4] && freq[5]) // 3-4-5-6
+            straightType = 3;
 
-        // Determine which small straight exists and mark those values to keep
-        if (freq[0] && freq[1] && freq[2] && freq[3]) {         // 1-2-3-4
-            keep[0] = keep[1] = keep[2] = keep[3] = true;
-        } 
-        else if (freq[1] && freq[2] && freq[3] && freq[4]) {    // 2-3-4-5
-            keep[1] = keep[2] = keep[3] = keep[4] = true;
-        } 
-        else if (freq[2] && freq[3] && freq[4] && freq[5]) {    // 3-4-5-6
-            keep[2] = keep[3] = keep[4] = keep[5] = true;
-        }
+        // straight type 1: we either have an extra 1-4 or a 6
+        // straight type 2: we have an extra 2-5
+        // straight type 3: we either have a 1 or an extra 3-6
 
         std::string rerolling = "";
         for (int i = 0; i < 5; i++) {
-            int face = dice[i].getFace(); // 1–6
-            rerolling += keep[face - 1] ? 'n' : 'y';
+            if (straightType == 1) {
+                if (freq[dice[i].getFace() - 1] == 2 || dice[i].getFace() == 6) {
+                    return rerolling + "ynnnn";
+                }
+            }
+            if (straightType == 2) {
+                if (freq[dice[i].getFace() - 1] == 2) {
+                    return rerolling + "ynnnn";
+                }
+            }
+            if (straightType == 3) {
+                if (freq[dice[i].getFace() - 1] == 2 || dice[i].getFace() == 1) {
+                    return rerolling + "ynnnn";
+                }
+            }
+            rerolling += 'n';
         }
         return rerolling;
     }

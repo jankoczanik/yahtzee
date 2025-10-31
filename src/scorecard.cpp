@@ -162,7 +162,7 @@ int Scorecard::frequencies(const Dice hand[], int freq[6]) const {
     for (int i = 0; i < 6; i ++) freq[i] = 0;
     for (int i = 0; i < 5; i ++) {
         freq[hand[i].getFace() - 1] ++;
-        total += hand[i].getFace() - 1;
+        total += hand[i].getFace();
     }
     return total;
 
