@@ -29,7 +29,7 @@ Developed by [Janko](https://github.com/jankoczanik)
 2. Open terminal and navigate to the **project folder**.
 3. Compile the source code:
 
-`g++ main.cpp`
+`g++ src/main.cpp src/dice.cpp src/functions.cpp src/scorecard.cpp`
 
 4. Run the executable file:
 
