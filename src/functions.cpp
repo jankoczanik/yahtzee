@@ -131,7 +131,7 @@ std::string botsMove(const Dice dice[5], Scorecard& score) {
         // Has a yahtzee, don't reroll
         return "nnnnn";
     }
-    if (score.hasKind(freq, 3) && score.hasKind(freq, 2)) {
+    if (score.hasKind(freq, 3) && score.hasKind(freq, 2) && score.available(9, false)) {
         // Has a full house, don't reroll
         return "nnnnn";
     }
