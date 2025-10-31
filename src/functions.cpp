@@ -97,7 +97,7 @@ int botsCategory(const Dice dice[5], const Scorecard& score) {
     // Take Chance:
     if (score.available(13, false)) return 13;
     // Take Upper if 2+
-    for (int i = 6; i >= 1; i --) {
+    for (int i = 1; i <= 6; i ++) {
         if (score.calcScore(dice, i) >= i * 2 && score.available(i, false)) {
             return i;
         }
