@@ -8,31 +8,88 @@ Scorecard::Scorecard() {
 }
 
 void Scorecard::printScorecard() const {
+    std::cout << " Upper Section   | You | Bot       Lower Section   | You | Bot \n";
+    std::cout << "-----------------|-----|-----     -----------------|-----|-----\n";
+    for (int i = 1; i <= 6; i ++) {
+        std::cout << " [" << (i) << "] " << getCategoryName(i) << " | " << formatScore(getScore(i, true)) << " | " << formatScore(getScore(i, false)) << "      ";
+        std::cout << " [" << (i + 6) << "] " << getCategoryName(i + 6) << " | " << formatScore(getScore(i + 6, true)) << " | " << formatScore(getScore(i + 6, false)) << "\n";
+    }
+    std::cout << "-----------------|-----|-----     ";
+    std::cout << " [13] Chance     | " << formatScore(getScore(13, true)) << " | " << formatScore(getScore(13, false)) << "\n";
+    std::cout << " Subtotal        | " << formatScore(getUpperTotal(true)) << " | " << formatScore(getUpperTotal(false)) << "      ";
+    std::cout << " ----------------|-----|-----" << std::endl;
+    std::cout << " Bonus           | " << formatScore(getUpperBonus(true)) << " | " << formatScore(getUpperBonus(false)) << "      ";
+    std::cout << " Lower Total     | " << formatScore(getLowerTotal(true)) << " | " << formatScore(getLowerTotal(false)) << std::endl;
+    std::cout << " Upper Total     | " << formatScore(getUpperTotal(true) + getUpperBonus(true)) << " | " << formatScore(getUpperTotal(false) + getUpperBonus(false))  << "      ";
+    std::cout << " GRAND TOTAL     | " << formatScore(getGrandTotal(true)) << " | " << formatScore(getGrandTotal(false)) << std::endl;
+}
 
+int Scorecard::getUpperTotal(bool isPlayer) const {
+    int total = 0, s;
+    for (int i = 1; i <= 6; i++) {
+        s = getScore(i, isPlayer);
+        if (s != -1) total += s;
+    } 
+    return total;
+}
+
+int Scorecard::getUpperBonus(bool isPlayer) const {
+   return (getUpperTotal(isPlayer) >= 63) ? 35 : 0;
+}
+
+int Scorecard::getLowerTotal(bool isPlayer) const {
+    int total = 0, s;
+    for (int i = 7; i <= 13; i++) {
+        s = getScore(i, isPlayer);
+        if (s != -1) total += s;
+    } 
+    return total;
+}
+
+int Scorecard::getGrandTotal(bool isPlayer) const {
+    return getUpperTotal(isPlayer) + getUpperBonus(isPlayer) + getLowerTotal(isPlayer);
+}
+
+int Scorecard::getScore(int category, bool isPlayer) const {
+    if (isPlayer)
+        return player[category - 1];
+    else    
+        return bot[category - 1];
+}
+
+std::string Scorecard::formatScore(int score) const {
+    if (score == -1)
+        return "   ";
+    else if (score < 10)
+        return "  " + std::to_string(score);
+    else if (score < 100)
+        return " " + std::to_string(score);
+    else
+        return "" + std::to_string(score);
 }
 
 std::string Scorecard::getCategoryName(int category) const {
     if (category < 1 || category > 13) return "";
     std::string categories[] = {
-        "One's",
-        "Two's",
-        "Three's",
-        "Four's",
-        "Five's",
-        "Six's",
-        "3 of Kind",
-        "4 of Kind",
-        "F House",
+        "One's      ",
+        "Two's      ",
+        "Three's    ",
+        "Four's     ",
+        "Five's     ",
+        "Six's      ",
+        "3 of Kind  ",
+        "4 of Kind  ",
+        "F House    ",
         "S Straight",
         "L Straight",
-        "Yahtzee",
-        "Chance",
+        "Yahtzee   ",
+        "Chance    ",
     };
     return categories[category - 1];
 }
 
 int Scorecard::score(const Dice hand[], int category, bool isPlayer) {
-    int scoring = getScore(hand, category);
+    int scoring = calcScore(hand, category);
 
     if (isPlayer)
         player[category - 1] = scoring;
@@ -42,7 +99,7 @@ int Scorecard::score(const Dice hand[], int category, bool isPlayer) {
     return scoring;
 }
 
-int Scorecard::getScore(const Dice hand[], int category) const {
+int Scorecard::calcScore(const Dice hand[], int category) const {
     if (category <= 6) { // 1's, 2's, 3's, 4's, 5's, 6's
 
         int total = 0;
@@ -105,7 +162,7 @@ int Scorecard::frequencies(const Dice hand[], int freq[6]) const {
     for (int i = 0; i < 6; i ++) freq[i] = 0;
     for (int i = 0; i < 5; i ++) {
         freq[hand[i].getFace() - 1] ++;
-        total += freq[hand[i].getFace()];
+        total += freq[hand[i].getFace() - 1];
     }
     return total;
 

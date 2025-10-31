@@ -11,7 +11,13 @@ int main() {
     Scorecard score;
     Dice hand[5];
 
-    playerTurn(hand, score);
+    for (int i = 0; i < 13; i ++) {
+        score.printScorecard();
+        playerTurn(hand, score);
+        botTurn(hand, score);
+    }
+
+    score.printScorecard();
 
     return 0;
 }
